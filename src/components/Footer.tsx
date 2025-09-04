@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
           </p>
           
                      <div className="flex items-center justify-center space-x-4 text-sm text-gray-500 light-mode:text-gray-600">
-            <span>© 2024 Smart Student Companion</span>
+            <span>© 2025 Smart Student Companion</span>
             <span>•</span>
             <span>Made with React & Tailwind CSS</span>
             <span>•</span>
