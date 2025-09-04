@@ -49,7 +49,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-4xl font-bold text-gold mb-2">Welcome Back!</h1>
-          <p className="text-gray-400 text-lg">Ready to boost your productivity?</p>
+          <p className="text-gray-400 text-lg light-mode:text-gray-600">Ready to boost your productivity?</p>
         </motion.div>
 
         {/* Tab Navigation */}
@@ -66,7 +66,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
                 activeTab === tab.id
                   ? 'bg-gold text-black'
-                  : 'bg-dark-card text-gray-300 hover:bg-dark-border'
+                  : 'bg-dark-card text-gray-300 hover:bg-dark-border light-mode:bg-gray-100 light-mode:text-gray-700 light-mode:hover:bg-gray-200'
               }`}
             >
               <span className="mr-2">{tab.icon}</span>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { X, Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
 import { useAuth } from './AuthContext';
 
 interface AuthModalProps {
@@ -73,7 +73,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           onClick={onClose}
         >
           <motion.div
-            className="bg-dark-card border border-dark-border rounded-xl p-8 w-full max-w-md"
+                         className="bg-dark-card border border-dark-border rounded-xl p-8 w-full max-w-md transition-colors duration-300 light-mode:bg-white light-mode:border-gray-200"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
@@ -86,7 +86,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               </h2>
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-white transition-colors"
+                                 className="text-gray-400 hover:text-white transition-colors light-mode:text-gray-600 light-mode:hover:text-gray-800"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -99,15 +99,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               {/* Name (Sign Up only) */}
               {!isLogin && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2 light-mode:text-gray-700">
                     Full Name
                   </label>
                   <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <input
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="input-field pl-4"
+                      className="input-field pl-10"
                       placeholder="Enter your full name"
                       required
                     />
@@ -117,7 +118,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2 light-mode:text-gray-700">
                   Email Address
                 </label>
                 <div className="relative">
@@ -135,7 +136,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
               {/* Password */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2 light-mode:text-gray-700">
                   Password
                 </label>
                 <div className="relative">
@@ -161,7 +162,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               {/* Confirm Password (Sign Up only) */}
               {!isLogin && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2 light-mode:text-gray-700">
                     Confirm Password
                   </label>
                   <div className="relative">
@@ -170,7 +171,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                       type={showPassword ? 'text' : 'password'}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="input-field pl-10"
+                      className="input-field pl-10 pr-10"
                       placeholder="Confirm your password"
                       required
                     />
@@ -201,7 +202,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
             {/* Toggle Mode */}
             <div className="mt-6 text-center">
-              <span className="text-gray-400">
+                             <span className="text-gray-400 light-mode:text-gray-600">
                 {isLogin ? "Don't have an account? " : "Already have an account? "}
               </span>
               <button

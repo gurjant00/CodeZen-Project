@@ -61,7 +61,7 @@ const ToolsSection: React.FC<ToolsSectionProps> = ({ subjects, setSubjects, isDa
             className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
               activeTool === tool.id
                 ? 'bg-gold text-black'
-                : 'bg-dark-card text-gray-300 hover:bg-dark-border'
+                : 'bg-dark-card text-gray-300 hover:bg-dark-border light-mode:bg-gray-100 light-mode:text-gray-700 light-mode:hover:bg-gray-200'
             }`}
           >
             <tool.icon className="w-5 h-5" />

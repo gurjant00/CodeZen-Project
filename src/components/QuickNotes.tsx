@@ -173,7 +173,7 @@ const QuickNotes: React.FC<QuickNotesProps> = ({ notes, setNotes }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            <p>No notes yet. Write your first note above!</p>
+            <p className="light-mode:text-gray-600">No notes yet. Write your first note above!</p>
           </motion.div>
         )}
       </motion.div>

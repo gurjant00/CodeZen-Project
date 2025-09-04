@@ -173,7 +173,7 @@ const Timetable: React.FC<TimetableProps> = ({ schedule, setSchedule }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            <p>No classes scheduled yet. Add your first class above!</p>
+            <p className="light-mode:text-gray-600">No classes scheduled yet. Add your first class above!</p>
           </motion.div>
         )}
       </motion.div>

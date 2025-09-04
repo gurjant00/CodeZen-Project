@@ -124,7 +124,7 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, setTasks }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              <p>No tasks yet. Add your first task above!</p>
+              <p className="light-mode:text-gray-600">No tasks yet. Add your first task above!</p>
             </motion.div>
           )}
         </div>

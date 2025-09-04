@@ -36,7 +36,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
               Smart Student Companion
             </h1>
             
-            <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto light-mode:text-gray-600">
               Your all-in-one student productivity hub. Organize tasks, track classes, 
               calculate grades, and stay motivated throughout your academic journey.
             </p>
@@ -54,7 +54,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
       </section>
 
       {/* Features Section */}
-      <section className="px-6 py-20 bg-dark-card">
+      <section className="px-6 py-20 bg-dark-card transition-colors duration-300 light-mode:bg-gray-100">
         <div className="max-w-6xl mx-auto">
           <motion.h2 
             className="text-3xl md:text-4xl font-bold text-center text-gold mb-12"
@@ -79,7 +79,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
                   <feature.icon className="w-8 h-8 text-black" />
                 </div>
                 <h3 className="text-xl font-semibold text-gold mb-2">{feature.title}</h3>
-                <p className="text-gray-400">{feature.description}</p>
+                <p className="text-gray-400 light-mode:text-gray-600">{feature.description}</p>
               </motion.div>
             ))}
           </div>

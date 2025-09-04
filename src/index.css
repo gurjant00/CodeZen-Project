@@ -4,18 +4,26 @@
 
 @layer base {
   body {
-    @apply bg-dark-bg text-white;
+    @apply bg-dark-bg text-white transition-colors duration-300;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  body.light-mode {
+    @apply bg-gray-50 text-gray-900;
+  }
 }
 
 @layer components {
   .card {
-    @apply bg-dark-card border border-dark-border rounded-xl p-6 shadow-lg;
+    @apply bg-dark-card border border-dark-border rounded-xl p-6 shadow-lg transition-colors duration-300;
+  }
+
+  .light-mode .card {
+    @apply bg-white border border-gray-200 shadow-md;
   }
   
   .btn-primary {
@@ -27,6 +35,10 @@
   }
   
   .input-field {
-    @apply bg-dark-card border border-dark-border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-gold focus:outline-none transition-colors duration-200;
+    @apply bg-dark-card border border-dark-border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-gold focus:outline-none transition-colors duration-300;
+  }
+
+  .light-mode .input-field {
+    @apply bg-white border border-gray-300 text-gray-900 placeholder-gray-500 focus:border-gold;
   }
 }

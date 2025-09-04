@@ -76,6 +76,12 @@ const AppContent: React.FC = () => {
 
   useEffect(() => {
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    // Apply theme class to body
+    if (isDarkMode) {
+      document.body.classList.remove('light-mode');
+    } else {
+      document.body.classList.add('light-mode');
+    }
   }, [isDarkMode]);
 
   if (loading) {
