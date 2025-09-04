@@ -11,8 +11,21 @@ interface ToolsSectionProps {
 
 const ToolsSection: React.FC<ToolsSectionProps> = ({ subjects, setSubjects, isDarkMode }) => {
   const [activeTool, setActiveTool] = useState('cgpa');
-  const [quote, setQuote] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+  const [loading] = useState(false);
+
+  const techQuotes = [
+    { content: "Stay hungry, stay foolish.", author: "Steve Jobs" },
+    { content: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
+    { content: "Move fast and break things.", author: "Mark Zuckerberg" },
+    { content: "The best way to predict the future is to invent it.", author: "Alan Kay" },
+    { content: "Software is eating the world.", author: "Marc Andreessen" },
+    { content: "Talk is cheap. Show me the code.", author: "Linus Torvalds" },
+    { content: "Simplicity is the soul of efficiency.", author: "Austin Freeman" },
+    { content: "Code is like humor. When you have to explain it, it's bad.", author: "Cory House" },
+    { content: "Any sufficiently advanced technology is indistinguishable from magic.", author: "Arthur C. Clarke" },
+    { content: "The computer was born to solve problems that did not exist before.", author: "Bill Gates" }
+  ];
 
   const tools = [
     { id: 'cgpa', name: 'CGPA Calculator', icon: Calculator },
@@ -20,30 +33,23 @@ const ToolsSection: React.FC<ToolsSectionProps> = ({ subjects, setSubjects, isDa
     { id: 'quotes', name: 'Motivational Quotes', icon: Quote },
   ];
 
-  // Fetch motivational quote
-  const fetchQuote = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('https://api.quotable.io/random?tags=inspirational|motivational');
-      const data = await response.json();
-      setQuote(`"${data.content}" - ${data.author}`);
-    } catch (error) {
-      setQuote('"The only way to do great work is to love what you do." - Steve Jobs');
-    }
-    setLoading(false);
-  };
+  // Get next quote
+  const getNextQuote = React.useCallback(() => {
+    setCurrentQuoteIndex((prevIndex) => 
+      prevIndex === techQuotes.length - 1 ? 0 : prevIndex + 1
+    );
+  }, [techQuotes.length]);
 
   useEffect(() => {
-    fetchQuote();
-  }, []);
+    // Initialize with a random quote
+    setCurrentQuoteIndex(Math.floor(Math.random() * techQuotes.length));
+  }, [techQuotes.length]);
 
   // Auto-refresh quote every 30 seconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      fetchQuote();
-    }, 30000);
+    const interval = setInterval(getNextQuote, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [getNextQuote]);
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -85,7 +91,11 @@ const ToolsSection: React.FC<ToolsSectionProps> = ({ subjects, setSubjects, isDa
           <UnitConverter />
         )}
         {activeTool === 'quotes' && (
-          <MotivationalQuotes quote={quote} loading={loading} onRefresh={fetchQuote} />
+          <MotivationalQuotes
+            quote={`"${techQuotes[currentQuoteIndex].content}" - ${techQuotes[currentQuoteIndex].author}`}
+            loading={loading}
+            onRefresh={getNextQuote}
+          />
         )}
       </motion.div>
     </div>
