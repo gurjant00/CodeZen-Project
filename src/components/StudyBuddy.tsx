@@ -4,6 +4,7 @@ import {
   Trophy, Star, Zap, Target, BookOpen, Brain, 
   Award, Flame, Calendar, Sparkles, Lightbulb
 } from 'lucide-react';
+import { useAuth } from './AuthContext';
 
 interface Achievement {
   id: string;
@@ -28,6 +29,7 @@ const StudyBuddy: React.FC<StudyBuddyProps> = ({
   subjectsCount, 
   scheduleCount 
 }) => {
+  const { user } = useAuth();
   const [level, setLevel] = useState(1);
   const [xp, setXp] = useState(0);
   const [totalXp, setTotalXp] = useState(0);
@@ -38,6 +40,13 @@ const StudyBuddy: React.FC<StudyBuddyProps> = ({
 
   const xpForNextLevel = level * 100;
   const xpProgress = (xp / xpForNextLevel) * 100;
+
+  // Helper function to get user-specific storage keys
+  const getStorageKey = useCallback((key: string) => {
+    if (!user) return key;
+    const userKey = user.isGuest ? 'guest_studybuddy' : `user_${user.id}_studybuddy`;
+    return `${userKey}_${key}`;
+  }, [user]);
 
   const buddyMessages = useMemo(() => ({
     welcome: [
@@ -190,17 +199,33 @@ const StudyBuddy: React.FC<StudyBuddyProps> = ({
     setTotalXp(newTotalXp);
     setLevel(newLevel);
 
-    localStorage.setItem('studyBuddyLevel', newLevel.toString());
-    localStorage.setItem('studyBuddyXp', (newXp % xpForNextLevel).toString());
-    localStorage.setItem('studyBuddyTotalXp', newTotalXp.toString());
-  }, [xp, totalXp, level, xpForNextLevel]);
+    // Don't save to localStorage for guest users
+    if (user && !user.isGuest) {
+      localStorage.setItem(getStorageKey('level'), newLevel.toString());
+      localStorage.setItem(getStorageKey('xp'), (newXp % xpForNextLevel).toString());
+      localStorage.setItem(getStorageKey('totalXp'), newTotalXp.toString());
+    }
+  }, [user, xp, totalXp, level, xpForNextLevel, getStorageKey]);
 
   // Initialize achievements
   useEffect(() => {
-    const savedAchievements = localStorage.getItem('achievements');
-    const savedLevel = localStorage.getItem('studyBuddyLevel');
-    const savedXp = localStorage.getItem('studyBuddyXp');
-    const savedTotalXp = localStorage.getItem('studyBuddyTotalXp');
+    if (!user) return; // Don't initialize if no user
+    
+    // For guest users, always start fresh (don't load from localStorage)
+    if (user.isGuest) {
+      setLevel(1);
+      setXp(0);
+      setTotalXp(0);
+      setAchievements(allAchievements);
+      setCurrentMessage(buddyMessages.welcome[Math.floor(Math.random() * buddyMessages.welcome.length)]);
+      setBuddyMood('happy');
+      return;
+    }
+    
+    const savedAchievements = localStorage.getItem(getStorageKey('achievements'));
+    const savedLevel = localStorage.getItem(getStorageKey('level'));
+    const savedXp = localStorage.getItem(getStorageKey('xp'));
+    const savedTotalXp = localStorage.getItem(getStorageKey('totalXp'));
 
     if (savedAchievements) {
       const savedData = JSON.parse(savedAchievements);
@@ -220,7 +245,7 @@ const StudyBuddy: React.FC<StudyBuddyProps> = ({
 
     // Welcome message
     setCurrentMessage(buddyMessages.welcome[Math.floor(Math.random() * buddyMessages.welcome.length)]);
-  }, [allAchievements, buddyMessages.welcome, achievementIcons]);
+  }, [user, getStorageKey, allAchievements, buddyMessages.welcome, achievementIcons]);
 
   // Check for achievements
   useEffect(() => {
@@ -286,9 +311,26 @@ const StudyBuddy: React.FC<StudyBuddyProps> = ({
 
     setAchievements(updatedAchievements);
     // Save achievements without icons to avoid circular reference
-    const achievementsToSave = updatedAchievements.map(({ icon, ...data }) => data);
-    localStorage.setItem('achievements', JSON.stringify(achievementsToSave));
-  }, [tasksCount, notesCount, subjectsCount, scheduleCount, achievements, addXp, achievementTips, achievementIcons]);
+    // Don't save to localStorage for guest users
+    if (user && !user.isGuest) {
+      const achievementsToSave = updatedAchievements.map(({ icon, ...data }) => data);
+      localStorage.setItem(getStorageKey('achievements'), JSON.stringify(achievementsToSave));
+    }
+  }, [user, getStorageKey, tasksCount, notesCount, subjectsCount, scheduleCount, achievements, addXp, achievementTips, achievementIcons]);
+
+  // Reset Study Buddy data when user changes or logs out
+  useEffect(() => {
+    if (!user) {
+      // Reset all state when user logs out
+      setLevel(1);
+      setXp(0);
+      setTotalXp(0);
+      setAchievements([]);
+      setCurrentMessage('');
+      setBuddyMood('happy');
+      setShowLevelUp(false);
+    }
+  }, [user]);
 
   const unlockedAchievements = achievements.filter(a => a.unlocked);
   const totalAchievements = achievements.length;
