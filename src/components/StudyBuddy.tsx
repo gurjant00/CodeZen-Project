@@ -276,7 +276,7 @@ const StudyBuddy: React.FC<StudyBuddyProps> = ({
           shouldUnlock = scheduleCount >= 1;
           break;
         case 'ai_pioneer':
-          shouldUnlock = localStorage.getItem('usedOCR') === 'true';
+          shouldUnlock = user && !user.isGuest ? localStorage.getItem(getStorageKey('usedOCR')) === 'true' : false;
           break;
       }
 

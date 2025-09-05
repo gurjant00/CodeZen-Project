@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, Clock, MapPin, Camera } from 'lucide-react';
 import { ClassSchedule } from '../App';
 import { createWorker } from 'tesseract.js';
+import { useAuth } from './AuthContext';
 
 interface TimetableProps {
   schedule: ClassSchedule[];
@@ -10,6 +11,7 @@ interface TimetableProps {
 }
 
 const Timetable: React.FC<TimetableProps> = ({ schedule, setSchedule }) => {
+  const { user } = useAuth();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     day: 'Monday',
@@ -22,6 +24,13 @@ const Timetable: React.FC<TimetableProps> = ({ schedule, setSchedule }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  // Helper function to get user-specific storage keys
+  const getStorageKey = (key: string) => {
+    if (!user) return key;
+    const userKey = user.isGuest ? 'guest_studybuddy' : `user_${user.id}_studybuddy`;
+    return `${userKey}_${key}`;
+  };
 
   const addClass = () => {
     if (formData.time && formData.subject && formData.room) {
@@ -315,7 +324,10 @@ const Timetable: React.FC<TimetableProps> = ({ schedule, setSchedule }) => {
         
         if (uniqueNewClasses.length > 0) {
           setSchedule([...schedule, ...uniqueNewClasses]);
-          localStorage.setItem('usedOCR', 'true'); // Mark for Study Buddy achievement
+          // Mark for Study Buddy achievement (only for non-guest users)
+          if (user && !user.isGuest) {
+            localStorage.setItem(getStorageKey('usedOCR'), 'true');
+          }
           alert(`🎉 Successfully imported ${uniqueNewClasses.length} classes from the image!\n\nYou can now view and edit them in your timetable.`);
         } else {
           alert('⚠️ No new classes found in the image (all classes already exist).');
