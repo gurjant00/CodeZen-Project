@@ -59,12 +59,12 @@ const QuickNotes: React.FC<QuickNotesProps> = ({ notes, setNotes }) => {
   };
 
   const colors = [
-    'bg-yellow-400/20 border-yellow-500/30',
-    'bg-blue-400/20 border-blue-500/30',
-    'bg-green-400/20 border-green-500/30',
-    'bg-purple-400/20 border-purple-500/30',
-    'bg-pink-400/20 border-pink-500/30',
-    'bg-orange-400/20 border-orange-500/30',
+    'bg-yellow-400/20 border-yellow-500/30 light-mode:bg-yellow-200/50 light-mode:border-yellow-400/40',
+    'bg-blue-400/20 border-blue-500/30 light-mode:bg-blue-200/50 light-mode:border-blue-400/40',
+    'bg-green-400/20 border-green-500/30 light-mode:bg-green-200/50 light-mode:border-green-400/40',
+    'bg-purple-400/20 border-purple-500/30 light-mode:bg-purple-200/50 light-mode:border-purple-400/40',
+    'bg-pink-400/20 border-pink-500/30 light-mode:bg-pink-200/50 light-mode:border-pink-400/40',
+    'bg-orange-400/20 border-orange-500/30 light-mode:bg-orange-200/50 light-mode:border-orange-400/40',
   ];
 
   return (
@@ -139,25 +139,25 @@ const QuickNotes: React.FC<QuickNotesProps> = ({ notes, setNotes }) => {
                 ) : (
                   <>
                     <div className="flex justify-between items-start mb-3">
-                      <p className="text-sm text-gray-400">
-                        {note.createdAt.toLocaleDateString()}
+                      <p className="text-sm text-gray-400 light-mode:text-gray-600">
+                        {new Date(note.createdAt).toLocaleDateString()}
                       </p>
                       <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={() => startEdit(note)}
-                          className="text-blue-400 hover:text-blue-300"
+                          className="text-blue-400 hover:text-blue-300 light-mode:text-blue-600 light-mode:hover:text-blue-700"
                         >
                           <Edit3 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => deleteNote(note.id)}
-                          className="text-red-400 hover:text-red-300"
+                          className="text-red-400 hover:text-red-300 light-mode:text-red-600 light-mode:hover:text-red-700"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
-                    <p className="text-white whitespace-pre-wrap break-words">
+                    <p className="text-white whitespace-pre-wrap break-words light-mode:text-gray-800">
                       {note.content}
                     </p>
                   </>
@@ -169,11 +169,11 @@ const QuickNotes: React.FC<QuickNotesProps> = ({ notes, setNotes }) => {
 
         {notes.length === 0 && (
           <motion.div
-            className="text-center py-12 text-gray-500"
+            className="text-center py-12 text-gray-500 light-mode:text-gray-600"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            <p className="light-mode:text-gray-600">No notes yet. Write your first note above!</p>
+            <p>No notes yet. Write your first note above!</p>
           </motion.div>
         )}
       </motion.div>

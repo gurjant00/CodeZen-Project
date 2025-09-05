@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, Calendar, Calculator, FileText, Target, Zap } from 'lucide-react';
 import AuthModal from './AuthModal';
+import { useAuth } from './AuthContext';
 
 interface LandingPageProps {
   onLogin: () => void;
@@ -9,6 +10,19 @@ interface LandingPageProps {
 
 const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const { signInAsGuest } = useAuth();
+  const [guestLoading, setGuestLoading] = useState(false);
+  const handleGuestSignIn = async () => {
+    setGuestLoading(true);
+    try {
+      await signInAsGuest();
+    } catch (error) {
+      console.error('Guest sign-in failed:', error);
+    } finally {
+      setGuestLoading(false);
+    }
+  };
+
   const features = [
     { icon: Target, title: 'Smart To-Do Lists', description: 'Organize tasks with ease' },
     { icon: Calendar, title: 'Class Timetable', description: 'Never miss a class again' },
@@ -41,14 +55,30 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
               calculate grades, and stay motivated throughout your academic journey.
             </p>
             
-            <motion.button
-              onClick={() => setShowAuthModal(true)}
-              className="btn-primary text-lg px-8 py-4"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Get Started
-            </motion.button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <motion.button
+                onClick={() => setShowAuthModal(true)}
+                className="btn-primary text-lg px-8 py-4"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Get Started
+              </motion.button>
+              
+              <motion.button
+                onClick={handleGuestSignIn}
+                disabled={guestLoading}
+                className="bg-gray-700 hover:bg-gray-600 text-white font-semibold text-lg px-8 py-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed light-mode:bg-gray-200 light-mode:hover:bg-gray-300 light-mode:text-gray-800"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {guestLoading ? 'Loading...' : 'Try as Guest'}
+              </motion.button>
+            </div>
+            
+            <p className="text-sm text-gray-500 mt-4 light-mode:text-gray-600">
+              Guest mode: No account required • Data won't be saved
+            </p>
           </motion.div>
         </div>
       </section>

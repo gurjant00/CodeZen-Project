@@ -83,8 +83,8 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, setTasks }) => {
                 exit={{ opacity: 0, x: 20 }}
                 className={`flex items-center justify-between p-4 rounded-lg border ${
                   task.completed 
-                    ? 'bg-dark-card border-green-500/30' 
-                    : 'bg-dark-card border-dark-border'
+                    ? 'bg-dark-card border-green-500/30 light-mode:bg-green-50 light-mode:border-green-400/30' 
+                    : 'bg-dark-card border-dark-border light-mode:bg-gray-50 light-mode:border-gold/20'
                 }`}
               >
                 <div className="flex items-center space-x-3 flex-1">
@@ -101,8 +101,8 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, setTasks }) => {
                   <span
                     className={`flex-1 ${
                       task.completed 
-                        ? 'line-through text-gray-500' 
-                        : 'text-white'
+                        ? 'line-through text-gray-500 light-mode:text-gray-400' 
+                        : 'text-white light-mode:text-gray-800'
                     }`}
                   >
                     {task.text}
@@ -110,7 +110,7 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, setTasks }) => {
                 </div>
                 <button
                   onClick={() => deleteTask(task.id)}
-                  className="text-red-400 hover:text-red-300 transition-colors ml-3"
+                  className="text-red-400 hover:text-red-300 transition-colors ml-3 light-mode:text-red-600 light-mode:hover:text-red-700"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -120,19 +120,19 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, setTasks }) => {
 
           {tasks.length === 0 && (
             <motion.div
-              className="text-center py-8 text-gray-500"
+              className="text-center py-8 text-gray-500 light-mode:text-gray-600"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              <p className="light-mode:text-gray-600">No tasks yet. Add your first task above!</p>
+              <p>No tasks yet. Add your first task above!</p>
             </motion.div>
           )}
         </div>
 
         {/* Stats */}
         {tasks.length > 0 && (
-          <div className="mt-6 pt-6 border-t border-dark-border">
-            <div className="flex justify-between text-sm text-gray-400">
+          <div className="mt-6 pt-6 border-t border-dark-border light-mode:border-gold/20">
+            <div className="flex justify-between text-sm text-gray-400 light-mode:text-gray-600">
               <span>Total: {tasks.length}</span>
               <span>Completed: {tasks.filter(t => t.completed).length}</span>
               <span>Pending: {tasks.filter(t => !t.completed).length}</span>

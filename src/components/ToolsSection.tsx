@@ -104,12 +104,12 @@ const ToolsSection: React.FC<ToolsSectionProps> = ({ subjects, setSubjects, isDa
 
 // CGPA Calculator Component
 const CGPACalculator: React.FC<{ subjects: Subject[]; setSubjects: (subjects: Subject[]) => void }> = ({ subjects, setSubjects }) => {
-  const [newSubject, setNewSubject] = useState({ name: '', credits: '', grade: 'A' });
-  const grades = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
+  const [newSubject, setNewSubject] = useState({ name: '', credits: '', grade: 'O' });
+  const grades = ['O', 'A+', 'A', 'B+', 'B', 'C+', 'C', 'D', 'F'];
 
   const gradePoints: { [key: string]: number } = {
-    'A': 4.0, 'A-': 3.7, 'B+': 3.3, 'B': 3.0, 'B-': 2.7,
-    'C+': 2.3, 'C': 2.0, 'C-': 1.7, 'D+': 1.3, 'D': 1.0, 'F': 0.0
+    'O': 10.0, 'A+': 9.0, 'A': 8.0, 'B+': 7.0, 'B': 6.0,
+    'C+': 5.0, 'C': 4.0, 'D': 3.0, 'F': 0.0
   };
 
   const addSubject = () => {
@@ -121,7 +121,7 @@ const CGPACalculator: React.FC<{ subjects: Subject[]; setSubjects: (subjects: Su
         grade: newSubject.grade,
       };
       setSubjects([...subjects, subject]);
-      setNewSubject({ name: '', credits: '', grade: 'A' });
+      setNewSubject({ name: '', credits: '', grade: 'O' });
     }
   };
 
@@ -140,10 +140,26 @@ const CGPACalculator: React.FC<{ subjects: Subject[]; setSubjects: (subjects: Su
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gold mb-6 flex items-center">
+      <h2 className="text-2xl font-bold text-gold mb-4 flex items-center">
         <span className="mr-3">🧮</span>
         CGPA Calculator
       </h2>
+      
+      {/* Indian Grading Scale Info */}
+      <div className="mb-6 p-4 bg-dark-card border border-dark-border rounded-lg light-mode:bg-gray-100 light-mode:border-gray-300">
+        <h3 className="text-sm font-semibold text-gold mb-2">Indian Grading Scale (10-Point System):</h3>
+        <div className="grid grid-cols-3 md:grid-cols-5 gap-2 text-xs text-gray-400 light-mode:text-gray-600">
+          <span><strong className="text-gold">O:</strong> 10.0</span>
+          <span><strong className="text-gold">A+:</strong> 9.0</span>
+          <span><strong className="text-gold">A:</strong> 8.0</span>
+          <span><strong className="text-gold">B+:</strong> 7.0</span>
+          <span><strong className="text-gold">B:</strong> 6.0</span>
+          <span><strong className="text-gold">C+:</strong> 5.0</span>
+          <span><strong className="text-gold">C:</strong> 4.0</span>
+          <span><strong className="text-gold">D:</strong> 3.0</span>
+          <span><strong className="text-red-400">F:</strong> 0.0</span>
+        </div>
+      </div>
 
       {/* Add Subject Form */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -154,14 +170,14 @@ const CGPACalculator: React.FC<{ subjects: Subject[]; setSubjects: (subjects: Su
           placeholder="Subject Name"
           className="input-field"
         />
-                 <input
+         <input
            type="number"
            value={newSubject.credits}
            onChange={(e) => setNewSubject({ ...newSubject, credits: e.target.value })}
            placeholder="Credits"
            className="input-field"
            min="1"
-           max="6"
+           max="8"
          />
         <select
           value={newSubject.grade}
@@ -180,15 +196,15 @@ const CGPACalculator: React.FC<{ subjects: Subject[]; setSubjects: (subjects: Su
       {/* Subjects List */}
       <div className="space-y-3 mb-6">
         {subjects.map((subject) => (
-          <div key={subject.id} className="flex items-center justify-between p-3 bg-dark-card border border-dark-border rounded-lg">
+          <div key={subject.id} className="flex items-center justify-between p-3 bg-dark-card border border-dark-border rounded-lg light-mode:bg-gray-50 light-mode:border-gold/20">
             <div className="flex items-center space-x-4">
-              <span className="font-semibold">{subject.name}</span>
-              <span className="text-gray-400">{subject.credits} credits</span>
+              <span className="font-semibold text-white light-mode:text-gray-800">{subject.name}</span>
+              <span className="text-gray-400 light-mode:text-gray-600">{subject.credits} credits</span>
               <span className="text-gold font-bold">{subject.grade}</span>
             </div>
             <button
               onClick={() => deleteSubject(subject.id)}
-              className="text-red-400 hover:text-red-300"
+              className="text-red-400 hover:text-red-300 light-mode:text-red-600 light-mode:hover:text-red-700"
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -197,10 +213,10 @@ const CGPACalculator: React.FC<{ subjects: Subject[]; setSubjects: (subjects: Su
       </div>
 
       {/* GPA Display */}
-      <div className="text-center p-6 bg-gold/10 border border-gold/30 rounded-lg">
+      <div className="text-center p-6 bg-gold/10 border border-gold/30 rounded-lg light-mode:bg-gold/20 light-mode:border-gold/40">
         <h3 className="text-lg font-semibold text-gold mb-2">Your CGPA</h3>
         <div className="text-4xl font-bold text-gold">{calculateGPA()}</div>
-        <p className="text-sm text-gray-400 mt-2">
+        <p className="text-sm text-gray-400 mt-2 light-mode:text-gray-600">
           Based on {subjects.length} subject{subjects.length !== 1 ? 's' : ''}
         </p>
       </div>
@@ -310,7 +326,7 @@ const UnitConverter: React.FC = () => {
       </div>
 
       {result && (
-        <div className="text-center p-6 bg-gold/10 border border-gold/30 rounded-lg">
+        <div className="text-center p-6 bg-gold/10 border border-gold/30 rounded-lg light-mode:bg-gold/20 light-mode:border-gold/40">
           <h3 className="text-lg font-semibold text-gold mb-2">Result</h3>
           <div className="text-3xl font-bold text-gold">
             {value} {fromUnit} = {result} {toUnit}
@@ -340,12 +356,12 @@ const MotivationalQuotes: React.FC<{ quote: string; loading: boolean; onRefresh:
         </button>
       </div>
 
-      <div className="text-center p-8 bg-gold/10 border border-gold/30 rounded-lg">
+      <div className="text-center p-8 bg-gold/10 border border-gold/30 rounded-lg light-mode:bg-gold/20 light-mode:border-gold/40">
         {loading ? (
           <div className="text-gold">Loading inspirational quote...</div>
         ) : (
           <div>
-            <p className="text-xl text-white mb-4 italic">"{quote.split('"')[1]}"</p>
+            <p className="text-xl text-white mb-4 italic light-mode:text-gray-800">"{quote.split('"')[1]}"</p>
             <p className="text-gold font-semibold">- {quote.split(' - ')[1]}</p>
           </div>
         )}

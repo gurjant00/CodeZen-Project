@@ -42,37 +42,94 @@ const AppContent: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
 
-  // Load data from localStorage on app start
+  // Load user-specific data when user changes
   useEffect(() => {
-    const savedTasks = localStorage.getItem('tasks');
-    const savedSchedule = localStorage.getItem('schedule');
-    const savedNotes = localStorage.getItem('notes');
-    const savedSubjects = localStorage.getItem('subjects');
+    if (user) {
+      // Load user-specific data
+      const userDataKey = user.isGuest ? 'guest_data' : `user_${user.id}_data`;
+      let savedUserData = localStorage.getItem(userDataKey);
+      
+      // Migration: Move legacy global data to demo user if it exists
+      if (!savedUserData && user.id === 'demo_001') {
+        const legacyTasks = localStorage.getItem('tasks');
+        const legacySchedule = localStorage.getItem('schedule');
+        const legacyNotes = localStorage.getItem('notes');
+        const legacySubjects = localStorage.getItem('subjects');
+        
+        if (legacyTasks || legacySchedule || legacyNotes || legacySubjects) {
+          const legacyData = {
+            tasks: legacyTasks ? JSON.parse(legacyTasks) : [],
+            schedule: legacySchedule ? JSON.parse(legacySchedule) : [],
+            notes: legacyNotes ? JSON.parse(legacyNotes) : [],
+            subjects: legacySubjects ? JSON.parse(legacySubjects) : []
+          };
+          localStorage.setItem(userDataKey, JSON.stringify(legacyData));
+          savedUserData = JSON.stringify(legacyData);
+          
+          // Clean up old global data
+          localStorage.removeItem('tasks');
+          localStorage.removeItem('schedule');
+          localStorage.removeItem('notes');
+          localStorage.removeItem('subjects');
+        }
+      }
+      
+      if (savedUserData && !user.isGuest) {
+        const userData = JSON.parse(savedUserData);
+        
+        // Convert date strings back to Date objects for tasks
+        const tasks = (userData.tasks || []).map((task: any) => ({
+          ...task,
+          createdAt: task.createdAt ? new Date(task.createdAt) : new Date()
+        }));
+        
+        // Convert date strings back to Date objects for notes
+        const notes = (userData.notes || []).map((note: any) => ({
+          ...note,
+          createdAt: note.createdAt ? new Date(note.createdAt) : new Date()
+        }));
+        
+        setTasks(tasks);
+        setSchedule(userData.schedule || []);
+        setNotes(notes);
+        setSubjects(userData.subjects || []);
+      } else {
+        // Reset to empty state for new users or guests
+        setTasks([]);
+        setSchedule([]);
+        setNotes([]);
+        setSubjects([]);
+      }
+    }
+    
+    // Load theme (global setting)
     const savedTheme = localStorage.getItem('theme');
-
-    if (savedTasks) setTasks(JSON.parse(savedTasks));
-    if (savedSchedule) setSchedule(JSON.parse(savedSchedule));
-    if (savedNotes) setNotes(JSON.parse(savedNotes));
-    if (savedSubjects) setSubjects(JSON.parse(savedSubjects));
     if (savedTheme) setIsDarkMode(savedTheme === 'dark');
-  }, []);
+  }, [user]);
 
-  // Save data to localStorage whenever it changes
+  // Save user-specific data to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-  }, [tasks]);
+    if (user && !user.isGuest) {
+      const userDataKey = `user_${user.id}_data`;
+      const userData = {
+        tasks,
+        schedule,
+        notes,
+        subjects
+      };
+      localStorage.setItem(userDataKey, JSON.stringify(userData));
+    }
+  }, [user, tasks, schedule, notes, subjects]);
 
+  // Clear data when user logs out
   useEffect(() => {
-    localStorage.setItem('schedule', JSON.stringify(schedule));
-  }, [schedule]);
-
-  useEffect(() => {
-    localStorage.setItem('notes', JSON.stringify(notes));
-  }, [notes]);
-
-  useEffect(() => {
-    localStorage.setItem('subjects', JSON.stringify(subjects));
-  }, [subjects]);
+    if (!user) {
+      setTasks([]);
+      setSchedule([]);
+      setNotes([]);
+      setSubjects([]);
+    }
+  }, [user]);
 
   useEffect(() => {
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');

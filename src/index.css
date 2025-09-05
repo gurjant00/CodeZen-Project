@@ -23,7 +23,7 @@
   }
 
   .light-mode .card {
-    @apply bg-white border border-gray-200 shadow-md;
+    @apply bg-gray-50 border border-gold/20 shadow-md;
   }
   
   .btn-primary {
@@ -39,6 +39,6 @@
   }
 
   .light-mode .input-field {
-    @apply bg-white border border-gray-300 text-gray-900 placeholder-gray-500 focus:border-gold;
+    @apply bg-gray-50 border border-gold/30 text-gray-900 placeholder-gray-500 focus:border-gold;
   }
 }

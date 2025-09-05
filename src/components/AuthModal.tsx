@@ -18,7 +18,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { signInWithEmail, signUpWithEmail } = useAuth();
+  const { signInWithEmail, signUpWithEmail, signInAsGuest } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,6 +60,19 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const toggleMode = () => {
     setIsLogin(!isLogin);
     resetForm();
+  };
+
+  const handleGuestSignIn = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      await signInAsGuest();
+      onClose();
+    } catch (error: any) {
+      setError(error.message || 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -199,6 +212,40 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 {loading ? 'Loading...' : (isLogin ? 'Sign In' : 'Create Account')}
               </button>
             </form>
+
+            {/* Guest Mode - Only show on login */}
+            {isLogin && (
+              <div className="mt-4">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-600 light-mode:border-gray-300" />
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-dark-card text-gray-400 light-mode:bg-white light-mode:text-gray-500">or</span>
+                  </div>
+                </div>
+                <button
+                  onClick={handleGuestSignIn}
+                  disabled={loading}
+                  className="w-full mt-4 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed light-mode:bg-gray-200 light-mode:hover:bg-gray-300 light-mode:text-gray-800"
+                >
+                  {loading ? 'Loading...' : 'Continue as Guest'}
+                </button>
+                <p className="text-xs text-gray-500 text-center mt-2 light-mode:text-gray-600">
+                  No account required • Data won't be saved
+                </p>
+              </div>
+            )}
+
+            {/* Demo Credentials Info */}
+            {isLogin && (
+              <div className="mt-4 p-3 bg-gold/10 border border-gold/30 rounded-lg">
+                <p className="text-xs text-gold font-semibold mb-1">💡 Demo Account:</p>
+                <p className="text-xs text-gray-400 light-mode:text-gray-600">
+                  Email: <span className="text-gold">student@demo.com</span> • Password: <span className="text-gold">demo123</span>
+                </p>
+              </div>
+            )}
 
             {/* Toggle Mode */}
             <div className="mt-6 text-center">

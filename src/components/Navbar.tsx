@@ -49,7 +49,16 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, setIsDarkMode }) => {
             <>
               <div className="flex items-center space-x-2 text-gray-300 light-mode:text-gray-700">
                 <User className="w-4 h-4" />
-                <span className="text-sm">{user.name || user.email}</span>
+                <span className="text-sm">
+                  {user.isGuest ? (
+                    <span className="flex items-center space-x-1">
+                      <span>{user.name}</span>
+                      <span className="text-xs bg-gold/20 text-gold px-2 py-0.5 rounded-full">Guest</span>
+                    </span>
+                  ) : (
+                    user.name || user.email
+                  )}
+                </span>
               </div>
               <button
                 onClick={logout}

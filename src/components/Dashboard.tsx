@@ -4,6 +4,7 @@ import TodoList from './TodoList';
 import Timetable from './Timetable';
 import QuickNotes from './QuickNotes';
 import ToolsSection from './ToolsSection';
+import StudyBuddy from './StudyBuddy';
 import { Task, ClassSchedule, Note, Subject } from '../App';
 
 interface DashboardProps {
@@ -29,12 +30,13 @@ const Dashboard: React.FC<DashboardProps> = ({
   setSubjects,
   isDarkMode
 }) => {
-  const [activeTab, setActiveTab] = useState('todo');
+  const [activeTab, setActiveTab] = useState('buddy');
 
   const tabs = [
+    { id: 'buddy', name: 'Study Buddy', icon: '✨' },
     { id: 'todo', name: 'To-Do List', icon: '📝' },
     { id: 'timetable', name: 'Timetable', icon: '📅' },
-    { id: 'notes', name: 'Quick Notes', icon: '📝' },
+    { id: 'notes', name: 'Quick Notes', icon: '📗' },
     { id: 'tools', name: 'Tools', icon: '🛠️' },
   ];
 
@@ -82,6 +84,14 @@ const Dashboard: React.FC<DashboardProps> = ({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
+          {activeTab === 'buddy' && (
+            <StudyBuddy 
+              tasksCount={tasks.filter(task => task.completed).length}
+              notesCount={notes.length}
+              subjectsCount={subjects.length}
+              scheduleCount={schedule.length}
+            />
+          )}
           {activeTab === 'todo' && (
             <TodoList tasks={tasks} setTasks={setTasks} />
           )}
