@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sun, Moon, LogOut, BookOpen, User } from 'lucide-react';
+import { Sun, Moon, LogOut, BookOpen, User, Github, Instagram } from 'lucide-react';
 import { useAuth } from './AuthContext';
 
 interface NavbarProps {
@@ -34,6 +34,30 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, setIsDarkMode }) => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
+          {/* Social Media Links */}
+          <div className="hidden md:flex items-center space-x-2">
+            <motion.a
+              href="https://github.com/gurjant00"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-lg hover:bg-dark-border transition-colors duration-200 group light-mode:hover:bg-gray-200"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Github className="w-4 h-4 text-gray-500 group-hover:text-gold transition-colors duration-200 light-mode:text-gray-600" />
+            </motion.a>
+            <motion.a
+              href="https://www.instagram.com/gurjant_sandha_"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-lg hover:bg-dark-border transition-colors duration-200 group light-mode:hover:bg-gray-200"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Instagram className="w-4 h-4 text-gray-500 group-hover:text-gold transition-colors duration-200 light-mode:text-gray-600" />
+            </motion.a>
+          </div>
+          
           <button
             onClick={() => setIsDarkMode(!isDarkMode)}
             className="p-2 rounded-lg bg-dark-card border border-dark-border hover:border-gold transition-colors duration-200 light-mode:bg-gray-100 light-mode:border-gray-300"
